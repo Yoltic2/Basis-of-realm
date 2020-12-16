@@ -1,0 +1,45 @@
+//To make it work yo need to install RealmSwift in the Podfile
+//  ViewController.swift
+//  DemoDr
+//
+//  Created by Emilio Y Martinez on 15/12/20.
+//
+import RealmSwift
+import UIKit
+
+class ViewController: UIViewController {
+    let realm = try!  Realm()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        guardar()
+        mostrar()
+        // Do any additional setup after loading the view.
+    }
+    func mostrar(){
+        let personas = try! realm.objects(Persona.self)// El try es muy importante
+        for persona in personas {
+            let nombre = persona.Nombre
+            let appelido = persona.Apellido
+            let nombreCompleto = "\(nombre) \(appelido)"
+            let etiqueta = UILabel(frame: view.bounds)
+            etiqueta.text = nombreCompleto
+            etiqueta.textAlignment = .center
+            view.addSubview(etiqueta)
+            etiqueta.font=UIFont(name: "arial", size: 32)
+        }
+       
+    }
+    func guardar(){
+        let jose = Persona()
+        jose.Apellido = "Hernandez"
+        jose.Nombre = "Jose"
+        realm.beginWrite()
+        realm.add(jose)
+        try! realm.commitWrite()
+    }
+}
+class Persona : Object{
+    @objc dynamic var Apellido: String = ""
+    @objc dynamic var Nombre :String = ""
+}
+
